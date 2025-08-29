@@ -38,7 +38,7 @@ jobs:
         with:
           aws-region: us-east-1
           role-duration-seconds: 3600
-          role-to-assume: ${{ vars.CDK_ATMOSPHERE_OIDC_ROLE }}
+          role-to-assume: ${{ secrets.CDK_ATMOSPHERE_OIDC_ROLE }}
           role-session-name: run-tests@aws-cdk-deployment-integ
           output-credentials: true
           role-chaining: true
@@ -82,8 +82,8 @@ jobs:
       - name: Run deployment integration tests
         run: node tools/@aws-cdk/deployment-integ/bin/deployment-integ.js
         env:
-          CDK_ATMOSPHERE_ENDPOINT: ${{ vars.CDK_ATMOSPHERE_ENDPOINT }}
-          CDK_ATMOSPHERE_POOl: ${{ vars.CDK_ATMOSPHERE_POOL}}
+          CDK_ATMOSPHERE_ENDPOINT: ${{ secrets.CDK_ATMOSPHERE_ENDPOINT }}
+          CDK_ATMOSPHERE_POOl: ${{ secrets.CDK_ATMOSPHERE_POOL}}
           
 
       - name: Export Docker images
