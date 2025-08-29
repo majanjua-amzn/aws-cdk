@@ -3,14 +3,10 @@ name: Codebuild PR Deployment Integration Test
 on:
   workflow_dispatch: {}
   merge_group: {}
-  push:
-    branches:
-      - main
-      - v2-release
   pull_request: {}
   pull_request_target:
     branches:
-      - v2-release
+      - main
     types:
       - opened
       - synchronize
@@ -25,6 +21,7 @@ concurrency:
 jobs:
   build:
     runs-on: codebuild-aws-cdk-github-actions-deployment-integ-runner-${{ github.run_id }}-${{ github.run_attempt }}
+    environment: deployment-integ-test
 
     env:
       PR_BUILD: true
@@ -32,6 +29,16 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v5
+      
+      - name: Authenticate Via OIDC Role
+        id: creds
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-region: us-east-1
+          role-duration-seconds: 3600
+          role-to-assume: ${{ secrets.CDK_ATMOSPHERE_OIDC_ROLE }}
+          role-session-name: run-tests@aws-cdk-deplyment-integ
+          output-credentials: true
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -67,13 +74,14 @@ jobs:
           sudo sysctl -w vm.max_map_count=2251954
 
       - name: Build
-        run: /bin/bash ./build.sh --ci
+        run: /bin/bash ./build.sh --ci --skip-test --skip-prereqs --skip-compat
 
-      - name: Run Rosetta
-        run: /bin/bash ./scripts/run-rosetta.sh
-
-      - name: Check for uncommitted changes
-        run: git diff-index --exit-code --ignore-space-at-eol --stat HEAD
+      - name: Run deployment integration tests
+        run: node tools/@aws-cdk/deployment-integ/bin/deployment-integ.js
+        env:
+          CDK_ATMOSPHERE_ENDPOINT: ${{ secrets.CDK_ATMOSPHERE_ENDPOINT }}
+          CDK_ATMOSPHERE_POOl: ${{ secrets.CDK_ATMOSPHERE_POOL}}
+          
 
       - name: Export Docker images
         if: ${{ github.event_name == 'push' && github.ref_name == 'main' }}
