@@ -34,8 +34,9 @@ jobs:
       
       - name: Assume Atmosphere Role
         id: creds
-        run: aws sts assume-role \
-          --role-arn arn:aws:iam::171014003109:role/${{ secrets.CDK_ATMOSPHERE_OIDC_ROLE }} \
+        run: |
+          aws sts assume-role \
+          --role-arn arn:aws:iam::$(aws sts get-caller-identity --query 'Account' --output text):role/${{ secrets.CDK_ATMOSPHERE_OIDC_ROLE }} \
           --role-session-name run-tests@aws-cdk-deployment-integ
 
       - name: Setup Node.js
