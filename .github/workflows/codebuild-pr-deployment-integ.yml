@@ -42,6 +42,7 @@ jobs:
           role-session-name: run-tests@aws-cdk-deployment-integ
           output-credentials: true
           role-chaining: true
+          role-skip-session-tagging: true
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
