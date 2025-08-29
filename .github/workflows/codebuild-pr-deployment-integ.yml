@@ -1,5 +1,8 @@
 name: Codebuild PR Deployment Integration Test
 
+permissions:
+  id-token: write
+
 on:
   workflow_dispatch: {}
   merge_group: {}
@@ -37,7 +40,7 @@ jobs:
           aws-region: us-east-1
           role-duration-seconds: 3600
           role-to-assume: ${{ secrets.CDK_ATMOSPHERE_OIDC_ROLE }}
-          role-session-name: run-tests@aws-cdk-deplyment-integ
+          role-session-name: run-tests@aws-cdk-deployment-integ
           output-credentials: true
 
       - name: Setup Node.js
