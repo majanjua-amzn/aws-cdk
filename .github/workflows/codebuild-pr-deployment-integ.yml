@@ -32,17 +32,11 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v5
       
-      - name: Authenticate Via OIDC Role
+      - name: Assume Atmosphere Role
         id: creds
-        uses: aws-actions/configure-aws-credentials@v4
-        with:
-          aws-region: us-east-1
-          role-duration-seconds: 3600
-          role-to-assume: ${{ secrets.CDK_ATMOSPHERE_OIDC_ROLE }}
-          role-session-name: run-tests@aws-cdk-deployment-integ
-          output-credentials: true
-          role-chaining: true
-          role-skip-session-tagging: true
+        run: aws sts assume-role \
+          --role-arn arn:aws:iam::$(aws sts get-caller-identity --query 'Account' --output text):role/${{ secrets.CDK_ATMOSPHERE_OIDC_ROLE }} \
+          --role-session-name run-tests@aws-cdk-deployment-integ
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
