@@ -35,9 +35,15 @@ jobs:
       - name: Assume Atmosphere Role
         id: creds
         run: |
-          aws sts assume-role \
+          # Assume role and capture the JSON output
+          CREDS=$(aws sts assume-role \
           --role-arn ${{ secrets.CDK_ATMOSPHERE_OIDC_ROLE }} \
-          --role-session-name run-tests@aws-cdk-deployment-integ
+          --role-session-name run-tests@aws-cdk-deployment-integ)
+
+          # Parse the JSON output and set environment variables
+          echo "AWS_ACCESS_KEY_ID=$(echo $CREDS | jq -r '.Credentials.AccessKeyId')" >> $GITHUB_ENV
+          echo "AWS_SECRET_ACCESS_KEY=$(echo $CREDS | jq -r '.Credentials.SecretAccessKey')" >> $GITHUB_ENV
+          echo "AWS_SESSION_TOKEN=$(echo $CREDS | jq -r '.Credentials.SessionToken')" >> $GITHUB_ENV
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
