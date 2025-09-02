@@ -45,6 +45,10 @@ jobs:
           echo "AWS_SECRET_ACCESS_KEY=$(echo $CREDS | jq -r '.Credentials.SecretAccessKey')" >> $GITHUB_ENV
           echo "AWS_SESSION_TOKEN=$(echo $CREDS | jq -r '.Credentials.SessionToken')" >> $GITHUB_ENV
 
+      - name: Confirm that the atmosphere role has been assumed.
+        run: |
+          aws sts get-caller-identity   
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
