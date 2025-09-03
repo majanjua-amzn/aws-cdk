@@ -6,13 +6,11 @@ permissions:
 on:
   workflow_dispatch: {}
   merge_group: {}
-  pull_request_target:
+  pull_request:
     branches:
       - main
-    types:
-      - opened
-      - synchronize
-      - reopened
+    paths:
+      - '**.js.snapshot**'
 
 # For every PR, cancel any previous builds in progress
 # ... but for all other builds we keep them running
