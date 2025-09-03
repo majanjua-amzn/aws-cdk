@@ -1,7 +1,12 @@
 import { Allocation } from '@cdklabs/cdk-atmosphere-client';
 import { spawn } from 'child_process';
 
-export const runInteg = (paths: string[], allocation: Allocation) => {
+export const runInteg = async (paths: string[], allocation: Allocation) => {
+  if (paths.length == 0) {
+    console.log('No snapshots changes were made, skipping deployment integ test.');
+    return;
+  }
+
   const spawnProcess = spawn('yarn', ['integ-runner', '--directory', 'packages', '--force', ...paths], {
     stdio: ['ignore', 'inherit', 'inherit'],
     env: {
@@ -15,7 +20,7 @@ export const runInteg = (paths: string[], allocation: Allocation) => {
   });
 
   return new Promise<void>((resolve, reject) => spawnProcess.on('close', (code) => {
-    if (code != 0) resolve();
-    reject(new Error(`Integration tests failed with exit code ${code}`));
+    if (code == 0) resolve();
+    else reject(new Error(`Integration tests failed with exit code ${code}`));
   }));
 };

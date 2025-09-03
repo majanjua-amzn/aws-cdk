@@ -9,7 +9,7 @@ export const gitDiff = async (): Promise<string> => {
   process.on('data', (data) => output += data);
 
   return new Promise((resolve, reject) => process.on('close', (code) => {
-    if (code != 0) resolve(output);
-    reject(`git diff process failed with exit code ${code}`);
+    if (code == 0) resolve(output);
+    else reject(`git diff process failed with exit code ${code}`);
   }));
 };

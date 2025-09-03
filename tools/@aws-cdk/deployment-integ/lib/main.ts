@@ -12,9 +12,13 @@ export const main = async ({ endpoint, pool }: {endpoint: string; pool: string})
   let outcome = 'failure';
 
   try {
-    await runInteg(await getChangedSnapshots(), allocation.allocation);
+    const changedSnapshots = await getChangedSnapshots();
+    console.log(`Detected changed snapshots:\n${changedSnapshots.join('\n')}`);
+    await runInteg(changedSnapshots, allocation.allocation);
     outcome = 'success';
-  } catch {} finally {
+  } catch (e) {
+    console.error(e);
+  } finally {
     await allocation.release(outcome);
   }
 
