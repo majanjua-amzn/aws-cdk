@@ -6,7 +6,7 @@ permissions:
 on:
   workflow_dispatch: {}
   merge_group: {}
-  pull_request:
+  pull_request_target:
     branches:
       - main
     paths:
@@ -31,6 +31,12 @@ jobs:
         uses: actions/checkout@v5
         with:
           fetch-depth: 0
+
+      - name: git debug
+        run: |
+          git log
+          git status
+          git branch
       
       - name: Assume Atmosphere Role
         id: creds
