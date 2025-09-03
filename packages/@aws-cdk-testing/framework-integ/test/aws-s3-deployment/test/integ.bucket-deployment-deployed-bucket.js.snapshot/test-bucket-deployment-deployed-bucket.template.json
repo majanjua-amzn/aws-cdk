@@ -9,7 +9,7 @@
       "Value": "true"
      },
      {
-      "Key": "aws-cdk:cr-owned:4b49afe7",
+      "Key": "aws-cdk:cr-owned:0b937251",
       "Value": "true"
      }
     ]
@@ -146,7 +146,7 @@
     "CustomS3AutoDeleteObjectsCustomResourceProviderRole3B1BD092"
    ]
   },
-  "DeployMe5AwsCliLayerF0F79631": {
+  "DeployMe7AwsCliLayerB3E99505": {
    "Type": "AWS::Lambda::LayerVersion",
    "Properties": {
     "Content": {
@@ -158,7 +158,7 @@
     "Description": "/opt/awscli/aws"
    }
   },
-  "DeployMe5CustomResource44BEE629": {
+  "DeployMe7CustomResource6980A485": {
    "Type": "Custom::CDKBucketDeployment",
    "Properties": {
     "ServiceToken": {
@@ -334,7 +334,7 @@
     "Handler": "index.handler",
     "Layers": [
      {
-      "Ref": "DeployMe5AwsCliLayerF0F79631"
+      "Ref": "DeployMe7AwsCliLayerB3E99505"
      }
     ],
     "Role": {
@@ -373,7 +373,7 @@
               ":",
               {
                "Fn::GetAtt": [
-                "DeployMe5CustomResource44BEE629",
+                "DeployMe7CustomResource6980A485",
                 "DestinationBucketArn"
                ]
               }

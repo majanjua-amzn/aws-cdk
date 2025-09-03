@@ -16,7 +16,7 @@ class TestBucketDeployment extends cdk.Stack {
       autoDeleteObjects: true, // needed for integration test cleanup
     });
 
-    const deploy = new s3deploy.BucketDeployment(this, 'DeployMe5', {
+    const deploy = new s3deploy.BucketDeployment(this, 'DeployMe7', {
       sources: [s3deploy.Source.asset(path.join(__dirname, 'my-website-second'))],
       destinationBucket: this.bucket,
       retainOnDelete: false, // default is true, which will block the integration test cleanup
