@@ -35,7 +35,7 @@ jobs:
 
       - name: git debug
         run: |
-          git log
+          git log -n 5
           git status
           git branch
       
@@ -97,6 +97,7 @@ jobs:
         env:
           CDK_ATMOSPHERE_ENDPOINT: ${{ vars.CDK_ATMOSPHERE_ENDPOINT }}
           CDK_ATMOSPHERE_POOL: ${{ vars.CDK_ATMOSPHERE_POOL}}
+          BASE_COMMIT: ${{ github.event.pull_request.base.sha }}
           
 
       - name: Export Docker images
